@@ -26,46 +26,60 @@
 
 // getDNSStats(["code.yandex.ru", "music.yandex.ru", "yandex.ru"]);
 
-function sortByHeight(arr) {
-  let arrInd = [];
-  let arrM = [];
-  let result = [];
-  for (let i = 0; i < arr.length; i++) {
-    if (arr[i] === -1) arrInd.push(i);
-    if (arr[i] !== -1) arrM.push(arr[i]);
-  }
-  arrM = arrM.sort((a, b) => a - b);
-  console.log(arrM);
+const chainMaker = {
+  result: [],
+  temp: [],
+  tempR: [],
+  Length: 0,
 
-  for (let i = 0; i < arr.length; i++) {
-    if (arrInd.includes(i)) result.push(-1);
-    else {
-      result.push(arrM[0]);
-      arrM.shift();
+  getLength() {
+    this.Length = this.temp.length;
+    return this;
+  },
+  addLink(value) {
+    //  if (value!==)
+
+    this.temp.push(value);
+    return this;
+  },
+  removeLink(position) {
+    for (let i = 0; i < this.temp.length; i++) {
+      if (i !== position) this.tempR.push(this.temp[i]);
     }
-  }
-
-  console.log([[[]]].flat().length);
-  console.log(result);
-  return result;
-}
-
-sortByHeight([-1, 150, 190, 170, -1, -1, 160, 180]);
-// sortByHeight([-1, 150, 190, 170, -1, -1, 160, 180]),
-// [-1, 150, 160, 170, -1, -1, 180, 190],
-// );
-// assert.deepEqual(
-// sortByHeight([-1, -1, -1, -1, -1]),
-// [-1, -1, -1, -1, -1],
-// );
-// assert.deepEqual(
-// sortByHeight([-1]),
-// [-1],
-// );
-// assert.deepEqual(
-// sortByHeight([4, 2, 9, 11, 2, 16]),
-// [2, 2, 4, 9, 11, 16],
-// );
-// assert.deepEqual(
-// sortByHeight([23, 54, -1, 43, 1, -1, -1, 77, -1, -1, -1, 3]),
-// [1, 3, -1, 23, 43, -1, -1, 54, -1, -1, -1, 77],
+    this.temp = this.tempR;
+    this.tempR = [];
+    return this;
+  },
+  reverseChain() {
+    this.temp = this.temp.reverse;
+    return this;
+  },
+  finishChain() {
+    for (let i = 0; i < this.temp.length; i++) {
+      if (i !== this.temp.length - 1) {
+        this.result.push(`( ${this.temp[i]} )~~`);
+      }
+      if (i === this.temp.length - 1) {
+        this.result.push(`( ${this.temp[i]} )`);
+      }
+    }
+    this.temp = [];
+    return this.result.join("");
+  },
+};
+// console.log(chainMaker.addLink(1).addLink(2));
+console.log(
+  chainMaker
+    .addLink("ABC")
+    .reverseChain()
+    .reverseChain()
+    .addLink("DEF")
+    .removeLink(1)
+    .addLink({ 0: "first", 1: "second", length: 2 })
+    .reverseChain()
+    .addLink(1.233)
+    .addLink(1.233)
+    .reverseChain()
+    .addLink("ABC")
+    .finishChain()
+);
